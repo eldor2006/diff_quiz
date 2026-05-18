@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Differensial tenglamalar quiz testi</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --paper: #ffffff;
+      --ink: #152033;
+      --muted: #667085;
+      --line: #d8e0ec;
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-soft: #e2f7f4;
+      --good: #15803d;
+      --good-soft: #dcfce7;
+      --bad: #b91c1c;
+      --bad-soft: #fee2e2;
+      --warn: #b7791f;
+      --warn-soft: #fef3c7;
+      --shadow: 0 20px 50px rgba(21, 32, 51, 0.09);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #e8f6f4 0, var(--bg) 320px);
+      line-height: 1.55;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 26px 0 54px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 12px 0 0;
+      color: var(--muted);
+      max-width: 780px;
+      font-size: 16px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 92px);
+      gap: 10px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      padding: 12px;
+      box-shadow: var(--shadow);
+      min-height: 78px;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--primary-dark);
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .quiz-card {
+      overflow: hidden;
+    }
+
+    .card-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, var(--primary-soft), #fff);
+      display: grid;
+      gap: 12px;
+    }
+
+    .question-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      color: var(--primary-dark);
+      background: var(--primary-soft);
+      font-weight: 700;
+    }
+
+    .question {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.42;
+    }
+
+    .answers {
+      padding: 20px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .answer {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+      color: var(--ink);
+      padding: 13px 14px;
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 12px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+      transition: 0.16s ease;
+    }
+
+    .answer:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f2fffd;
+      transform: translateY(-1px);
+    }
+
+    .answer:disabled {
+      cursor: default;
+    }
+
+    .letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #eef2ff;
+      color: #29356b;
+      font-weight: 800;
+    }
+
+    .answer.correct {
+      border-color: var(--good);
+      background: var(--good-soft);
+    }
+
+    .answer.correct .letter {
+      background: var(--good);
+      color: white;
+    }
+
+    .answer.wrong {
+      border-color: var(--bad);
+      background: var(--bad-soft);
+    }
+
+    .answer.wrong .letter {
+      background: var(--bad);
+      color: white;
+    }
+
+    .feedback {
+      min-height: 54px;
+      margin: 0 20px 20px;
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: none;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.good {
+      border-color: var(--good);
+      background: var(--good-soft);
+      color: #14532d;
+    }
+
+    .feedback.bad {
+      border-color: var(--bad);
+      background: var(--bad-soft);
+      color: #7f1d1d;
+    }
+
+    .actions {
+      padding: 0 20px 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .left-actions, .right-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: var(--radius);
+      min-height: 42px;
+      padding: 10px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #e8edf5;
+      color: var(--ink);
+    }
+
+    .btn.primary {
+      color: white;
+      background: var(--primary);
+    }
+
+    .btn.warn {
+      color: #6b3d00;
+      background: var(--warn-soft);
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .side {
+      position: sticky;
+      top: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .side-section {
+      padding: 16px;
+    }
+
+    .side h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .progress-wrap {
+      height: 12px;
+      border-radius: 999px;
+      background: #e8edf5;
+      overflow: hidden;
+      margin: 10px 0 12px;
+    }
+
+    .progress {
+      width: 0;
+      height: 100%;
+      background: var(--primary);
+      transition: width 0.2s ease;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .mini-stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      background: #fbfcfe;
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 20px;
+      color: var(--primary-dark);
+      line-height: 1;
+    }
+
+    .mini-stat span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .jump-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      max-height: 340px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .jump {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 34px;
+      background: #fbfcfe;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .jump.current {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .jump.done.correct {
+      border-color: var(--good);
+      background: var(--good-soft);
+      color: var(--good);
+    }
+
+    .jump.done.wrong {
+      border-color: var(--bad);
+      background: var(--bad-soft);
+      color: var(--bad);
+    }
+
+    .result {
+      display: none;
+      padding: 20px;
+      margin-top: 18px;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result h2 {
+      margin: 0 0 8px;
+      font-size: 26px;
+    }
+
+    .review {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .review-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fbfcfe;
+    }
+
+    .review-item.good {
+      border-color: var(--good);
+      background: #f2fff6;
+    }
+
+    .review-item.bad {
+      border-color: var(--bad);
+      background: #fff7f7;
+    }
+
+    .math {
+      font-family: "Cambria Math", "Times New Roman", serif;
+      font-size: 1.04em;
+    }
+
+    @media (max-width: 900px) {
+      .hero, .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .side {
+        position: static;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .app {
+        width: min(100% - 18px, 1120px);
+      }
+
+      .question {
+        font-size: 18px;
+      }
+
+      .answer {
+        grid-template-columns: 32px 1fr;
+        padding: 11px;
+      }
+
+      .letter {
+        width: 28px;
+        height: 28px;
+      }
+
+      .jump-grid {
+        grid-template-columns: repeat(4, 1fr);
+        max-height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div>
+        <h1>Differensial tenglamalar quiz testi</h1>
+        <p class="lead">Variantlar har safar aralashtiriladi. Javob tanlanganda noto'g'ri bo'lsa ham to'g'ri javob darhol ko'rsatiladi.</p>
+      </div>
+      <div class="summary">
+        <div class="stat"><strong id="totalStat">0</strong><span>savol</span></div>
+        <div class="stat"><strong>60</strong><span>boshlanish raqami</span></div>
+        <div class="stat"><strong>227</strong><span>oxirgi raqam</span></div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <article class="panel quiz-card">
+        <header class="card-head">
+          <div class="question-meta">
+            <span class="badge" id="questionNumber">60-savol</span>
+            <span id="positionText">1 / 1</span>
+          </div>
+          <h2 class="question math" id="questionText"></h2>
+        </header>
+        <div class="answers" id="answers"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="actions">
+          <div class="left-actions">
+            <button class="btn" id="prevBtn" type="button">Oldingi</button>
+            <button class="btn warn" id="restartBtn" type="button">Qayta boshlash</button>
+          </div>
+          <div class="right-actions">
+            <button class="btn primary" id="nextBtn" type="button">Keyingi</button>
+            <button class="btn primary" id="finishBtn" type="button">Natijani ko'rish</button>
+          </div>
+        </div>
+      </article>
+
+      <aside class="side">
+        <section class="panel side-section">
+          <h2>Natija</h2>
+          <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+          <div class="score-grid">
+            <div class="mini-stat"><strong id="answeredStat">0</strong><span>ishlangan</span></div>
+            <div class="mini-stat"><strong id="correctStat">0</strong><span>to'g'ri</span></div>
+            <div class="mini-stat"><strong id="wrongStat">0</strong><span>xato</span></div>
+            <div class="mini-stat"><strong id="percentStat">0%</strong><span>foiz</span></div>
+          </div>
+        </section>
+        <section class="panel side-section">
+          <h2>Savollar</h2>
+          <div class="jump-grid" id="jumpGrid"></div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="panel result" id="resultBox">
+      <h2>Yakuniy natija</h2>
+      <p id="resultText"></p>
+      <div class="review" id="review"></div>
+    </section>
+  </main>
+
+  <script>
+    const rawQuestions = String.raw`
+60-Savol: y₁ , y₂ va y₃ o'zgarmas koeffitsientli 3-tartibli oddiy differensial tenglamani chiziqli erkli xususiy yechimlari bo'lsa tenglamaning umumiy yechimini ko'rsating.
+A) y = c₁y₁ + c₂y₂ + c₃y₃ , c₁ , c₂ , c₃ – o'zgarmas son
+B) y = y₁ + c₁(y₂ + y₁) , c₁ – o'zgarmas son;
+C) y = c(y₁ + y₂) , c₁ – o'zgarmas son;
+D) y = e^(y₁ + y₂)
+To‘g‘ri javob: A
+
+61-Savol: Umumiy yechimdan olingan va undagi ixtiyoriy o'zgarmas c ga aniq c = c₀ qiymat berishdan hosil bo'lgan φ(x, c₀) yechimga tenglamaning...
+A) Xususiy yechimi deyiladi.
+B) Umumiy yechimi deyiladi
+C) Karrali yechimi deyiladi
+D) Umumiy integrali deyiladi
+To‘g‘ri javob: A
+
+62-Savol: x' + g(t)x = f(t)xᵏ , k ≠ 0, k ≠ 1 tenglamani turini aniqlang.
+A) Bernulli tenglamasi
+B) Chiziqli tenglama
+C) O'zgaruvchilari ajraladigan tenglama
+D) Klero tenglamasi
+To‘g‘ri javob: A
+
+63-Savol: x' + g(t)x = f(t)xᵏ tenglama qachon chiziqli tenglama bo'ladi?
+A) k = 0
+B) k = 1
+C) k = 2
+D) k = 3
+To‘g‘ri javob: A
+
+64-Savol: n-tartibli differensialli tenglamaning oshkormas ko‘rinishdagi umumiy yechimi qaysi javobda berilgan?
+A) φ(x, y, c₁ , ... , cₙ) = 0
+B) y = φ(x)
+C) φ(x, y) = 0
+D) y = y(x)
+To‘g‘ri javob: A
+
+65-Savol: Ikkinchi tartibli chiziqli o‘zgarmas koeffitsientli bir jinsli sistemaning xarakteristik sonlari haqiqiy va bir xil ishorali sonlar bo‘lsa, unda (0,0) maxsus nuqta turi qaysi javobda berilgan?
+A) Tugun tipdagi nuqta
+B) Egarsimon tipdagi nuqta
+C) Fokus
+D) Markaz
+To‘g‘ri javob: A
+
+66-Savol: Ikkinchi tartibli chiziqli o‘zgarmas koeffitsientli bir jinsli sistemaning xarakteristik sonlari haqiqiy har xil ishorali sonlar bo‘lsa, unda (0,0) maxsus nuqta turi qaysi javobda berilgan?
+A) Egarsimon tipdagi nuqta
+B) Tugun tipdagi nuqta
+C) Fokus
+D) Markaz
+To‘g‘ri javob: A
+
+67-Savol: Ikkinchi tartibli chiziqli o‘zgarmas koeffitsientli bir jinsli sistemaning xarakteristik sonlari kompleks son bo‘lib, uning haqiqiy qismi nolga teng bo‘lib ya’ni sof mavhum son bo‘lsa (0,0) maxsus nuqta turi qaysi javobda berilgan?
+A) Markaz tipdagi nuqta
+B) Tugun tipdagi nuqta
+C) Fokus
+D) Egarsimon tipdagi nuqta
+To‘g‘ri javob: A
+
+68-Savol: Quyidagi tenglamalarning qaysi biri ikkinchi tartibli differensial tenglama?
+A) (d²y / dx²) + sin(x + y) = 0
+B) (dy / dx) + sin(x + y²) = 0
+C) (d²y / dx²) + cos(x + y''') = 0
+D) (d³y / dx³) - sin x² = 0
+To‘g‘ri javob: A
+
+69-Savol: y' = f(x + y - 3) ko‘rinishdagi tenglamani yechish uchun qanday almashtirish bajarish kerak?
+A) z = x + y - 3
+B) z = 2x + f(y) - 3
+C) z = xy - 3
+D) z = f(xy) - 3
+To‘g‘ri javob: A
+
+70-Savol: Differensial tenglamaning integral chizig‘i deb nimaga aytiladi?
+A) Differensial tenglama yechimining grafigiga
+B) Yechimdan olingan ikkinchi tartibli hosilaning grafigiga
+C) Yechimning hosilasining grafigiga
+D) Yechimdan olingan integralning grafigiga
+To‘g‘ri javob: A
+
+71-Savol: y⁽ⁿ⁾ = f(x, y', ... , y⁽ⁿ⁻¹⁾) tenglama uchun qo‘yilgan boshlang‘ich shart qaysi javobda berilgan?
+A) y(x₀) = y₀ , y'(x₀) = y'₀ , ... , y⁽ⁿ⁻¹⁾(x₀) = y₀⁽ⁿ⁻¹⁾
+B) y(x₀) = y₀ , y'(x₀) = y'₀ , ... , y⁽ⁿ⁻²⁾(x₀) = y₀⁽ⁿ⁻²⁾
+C) y(x₀) = y₀ , y'(x₀) = y'₀ , ... , y⁽ⁿ⁻³⁾(x₀) = y₀⁽ⁿ⁻³⁾
+D) y(x₀) = y₀ , y'(x₀) = y'₀ , ... , y⁽ⁿ⁻⁴⁾(x₀) = y₀⁽ⁿ⁻⁴⁾
+To‘g‘ri javob: A
+
+72-Savol: Ushbu y''' = xy'' tenglamaning tartibini qaysi almashtirish yordamida pasaytirish mumkin?
+A) z = y''
+B) z = y
+C) z = y'
+D) z = y²
+To‘g‘ri javob: A
+
+73-Savol: Agar f(x,y) funksiya ∀λ > 0 uchun f(λx, λy) = λᵏ f(x,y) shartni qanoatlantirsa, y' = f(x, y) tenglamaga...
+A) k- darajali bir jinsli differensial tenglama deyiladi.
+B) k- darajali Bernulli tenglamasi deyiladi.
+C) k- darajali bir jinslimas differensial tenglama deyiladi.
+D) k- darajali Rikkati tenglamasi deyiladi.
+To‘g‘ri javob: A
+
+74-Savol: Rikkati tenglamasining bitta y₁(x) yechimi ma'lum bo'lsa, uning umumiy yechimini topish uchun qanday almashtirish bajarish lozim?
+A) y = y₁(x) + u(x)
+B) y = y₁(x)u(x)
+C) y = y₁²(x) + u(x)
+D) y = y₁²(x)u(x)
+To‘g‘ri javob: A
+
+75-Savol: Rikkati tenglamasi kvadraturada ... integrallanuvchi degan jumla qaysi javobda noto'g'ri berilgan?
+A) bitta hususiy yechim berilganda
+B) har doim
+C) ikkita hususiy yechim berilganda
+D) uchta hususiy yechim berilganda
+To‘g‘ri javob: A
+
+76-Savol: Agar oddiy differensial tenglamalar sistemasiga erkli o'zgaruvchi oshkor ravishda kirmasa bunday sistemaga...
+A) muxtor sistema deyiladi
+B) normal sistema deyiladi
+C) maxsus sistema deyiladi
+D) oddiy sistema deyiladi
+To‘g‘ri javob: A
+
+77-Savol: Agar bir vaqtda nolga teng bo'lmagan shunday α₁, α₂, ... , α_k o'zgarmas sonlar mavjud bo'lsaki, biror I intervalda ushbu α₁φ₁(x) + α₂φ₂(x) + ... + α_k φ_k(x) = 0, ∀x ∈ I tenglik o'rinli bo'lsa, φ₁(x), φ₂(x), ... , φ_k(x) funksiyalar I intervalda...
+A) chiziqli bog'liq deyiladi.
+B) chiziqli erkli deyiladi.
+C) chiziqli bog'lanmagan deyiladi.
+D) uzluksiz deyiladi.
+To‘g‘ri javob: A
+
+78-Savol: Ushbu M(x,y)dx + N(x,y)dy = 0 differensial tenglama uchun integrallovchi ko'paytuvchi μ(x,y) = μ(x) bo'lsa u holda ...
+A) μ(x) = C * exp( ∫_x₀^x ( (∂M/∂y - ∂N/∂x) / N ) dx )
+B) μ(x) = C * exp( - ∫_x₀^x ( (∂M/∂y - ∂N/∂x) / N ) dx )
+C) μ(x) = C * exp( ∫_x₀^x ( (∂M/∂y - ∂N/∂x) / N ) dx )
+D) μ(x) = C * exp( ∫_x₀^x ( (∂M/∂y + ∂N/∂x) / N ) dx )
+To‘g‘ri javob: A
+
+79-Savol: Ushbu M(x,y)dx + N(x,y)dy = 0 differensial tenglama uchun integrallovchi ko'paytuvchi μ(x,y) = μ(y) bo'lsa u holda ...
+A) μ(y) = C * exp( ∫_y₀^y ( (∂N/∂x - ∂M/∂y) / M ) dy )
+B) μ(y) = C * exp( - ∫_y₀^y ( (∂N/∂x - ∂M/∂y) / M ) dy )
+C) μ(y) = C * exp( ∫_y₀^y ( (∂N/∂x - ∂M/∂y) / N ) dy )
+D) μ(y) = C * exp( ∫_x₀^x ( (∂N/∂x - ∂M/∂y) / N ) dx )
+To‘g‘ri javob: A
+
+80-Savol: Ushbu y' = f(ax + by + c) differensial tenglamada z = ax + by + c almashtirish bajarilsa, u qanday ko'rinishga keladi?
+A) z' = a + b * f(z)
+B) yz' = a + b * f(z)
+C) xz' = a + b * f(z)
+D) yz' = ax + b * f(z)
+To‘g‘ri javob: A
+
+81-Savol: Agar f(x,y) funksiya uchun f(λ^α x, λ^β y) = λ^(α-β) f(x,y), ∀λ > 0 shart bajarilsa, y' = f(x, y) tenglamaga...
+A) kvazi bir jinsli differensial tenglama deyiladi.
+B) bir jinslimas differensial tenglama deyiladi.
+C) Bernulli differensial tenglamasi deyiladi.
+D) o'zgaruvchilari ajraladigan differensial tenglama deyiladi.
+To‘g‘ri javob: A
+
+82-Savol: Ushbu y' = Ay² + Bx^α , A ≠ 0, B ≠ 0 Rikkati tenglamasi kvadraturada integrallanuvchi bo'ladi, agarda...
+A) α / (2α + 4) soni butun bo'lsa
+B) 1 / (α + 4) soni butun bo'lsa
+C) 1 / (2α - 4) soni butun bo'lsa
+D) α / (2α + 4) soni musbat bo'lsa
+To‘g‘ri javob: A
+
+83-Savol: Chiziqli bir jinsli dy/dx = p(x)y + q(x) differensial tenglamaning integrallovchi ko'paytuvchisini ko'rinishini aniqlang?
+A) μ(x) = exp{ - ∫ p(x)dx }
+B) μ(x) = exp{ ∫ p(x)dx }
+C) μ(x) = exp{ x + ∫ p(x)dx }
+D) μ(x) = exp{ 2x + ∫ p(x)dx }
+To‘g‘ri javob: A
+
+84-Savol: Agar f(x,y) funksiya P sohaning har bir nuqtasida f'_y(x,y) xususiy hosilaga ega bo‘lib, |f'_y(x,y)| ≤ C, C = const bo‘lsa, u holda bu funksiya P to‘g‘ri to‘rtburchakda...
+A) y- o‘zgaruvchi bo‘yicha Lipshits shartini qanoatlantiradi.
+B) y- o‘zgaruvchi bo‘yicha Lipshits shartini qanoatlantirmaydi.
+C) x- o‘zgaruvchi bo‘yicha Koshi shartini qanoatlantiradi.
+D) x- o‘zgaruvchi bo‘yicha uzilishga ega bo‘ladi
+To‘g‘ri javob: A
+
+85-Savol: u(x), v(x) funksiyalar [x₀, x] oraliqda uzluksiz va manfiymas va u(x) ≤ A + ∫_x₀^x | u(t)v(t)dt |, A ≥ 0 o‘rinli bo‘lsa, u holda u(x) uchun qaysi tengsizlik bajariladi?
+A) u(x) ≤ A * exp( ∫_x₀^x | v(t)dt | )
+B) u(x) ≥ A * exp( ∫_x₀^x | v(t)dt | )
+C) u(x) ≥ A | ∫_x₀^x v(t)dt |
+D) u(x) ≤ A - exp( ∫_x₀^x | v(t)dt | )
+To‘g‘ri javob: A
+
+86-Savol: Ushbu y' = f(x,y) , y(x₀) = y₀ Koshi masalasining yechimi mavjud, yagona va turg‘un bo‘lsa, Koshi masalasi...
+A) korrekt deyiladi
+B) nokorrekt deyiladi
+C) singulyar deyiladi
+D) bir jinsli deyiladi
+To‘g‘ri javob: A
+
+87-Savol: Quyidagi jumlalardan qaysi biri to‘g‘ri?
+A) Chiziqli bog‘liq funksiyalardan tuzilgan vronskiy determinanti har doim nolga teng.
+B) Chiziqli erkli funksiyalardan tuzilgan vronskiy determinanti har doim nolga teng.
+C) Chiziqli bog‘liq funksiyalardan tuzilgan vronskiy determinanti har doim noldan farqli.
+D) Chiziqli differensial tenglamaning fundamental yechimlar sistemasidan tuzilgan vronskiy determinanti har doim noldan katta.
+To‘g‘ri javob: A
+
+88-Savol: Quyidagi jumlalardan qaysi biri to‘g‘ri?
+A) Chiziqli differensial tenglamaning fundamental yechimlar sistemasidan tuzilgan vronskiy determinanti har doim noldan farqli.
+B) Chiziqli differensial tenglamaning fundamental yechimlar sistemasidan tuzilgan vronskiy determinanti har doim nolga teng.
+C) Chiziqli bog‘liq funksiyalardan tuzilgan vronskiy determinanti har doim noldan farqli.
+D) Chiziqli differensial tenglamaning fundamental yechimlar sistemasidan tuzilgan vronskiy determinanti har doim noldan katta.
+To‘g‘ri javob: A
+
+89-Savol: y^(V) = f(x, y'', y''', y^(IV)) tenglamaning tartibini qaysi almashtirish yordamida 2 birlikka pasaytirish mumkin?
+A) y'' = z
+B) y' = z
+C) y''' = z
+D) y^(IV) = z
+To‘g‘ri javob: A
+
+90-Savol: Ushbu y' + p(x)y = q(x) tenglamaning umumiy yechimi qaysi ko‘rinishda bo‘ladi?
+A) y = exp( -∫ p(x)dx ) * ( C + ∫ q(x) * exp( ∫ p(x)dx ) dx )
+B) y = exp( ∫ p(x)dx ) * ( C + ∫ q(x) * exp( ∫ p(x)dx ) dx )
+C) y = exp( ∫ q(x)dx ) * ( C + ∫ p(x) * exp( ∫ q(x)dx ) dx )
+D) y = exp( -∫ q(x)dx ) * ( C + ∫ p(x) * exp( ∫ q(x)dx ) dx )
+To‘g‘ri javob: A
+
+91-Savol: O‘zgarmas koeffitsientli ikkinchi tartibli chiziqli bir jinsli differensial tenglamaning xususiy yechimi e^(2x) * cos 3x bo‘lsa, u holda bu tenglamaning xos sonlarini qanday bo‘ladi.
+A) 2 ± 3i
+B) 2, 3
+C) 1 ± 2i
+D) 3 ± 2i
+To‘g‘ri javob: A
+
+92-Savol: Quyidagi ay'' + 3xy' + 5y = 0 tenglama Eyler tenglamasi bo‘lishi uchun a nimaga teng bo‘lishi kerak?
+A) x²
+B) x
+C) 1
+D) 0
+To‘g‘ri javob: A
+
+93-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (1 + y²)dx + (1 + x²)dy = 0
+A) arctg x + arctg y = C
+B) y = tg( ln Cx )
+C) y = (1 + Cy + ln y) * cos x
+D) 1 + e^y = C(1 + x²)
+To‘g‘ri javob: A
+
+94-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (1 + y²)dx + xydy = 0
+A) x² * (1 + y²) = C
+B) 1 + e^y = C(1 + x²)
+C) √(1 - x²) + √(1 - y²) = C
+D) y² * (1 - y) = (x + C)² ; y = 1
+To‘g‘ri javob: A
+
+95-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' * sin x - y * cos x = 0 , y(π/2) = 1
+A) y = sin x
+B) y = 1
+C) y = cos x
+D) y = tg x
+To‘g‘ri javob: A
+
+96-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (1 + y²)dx = xdy
+A) y = tg( ln Cx )
+B) x² = (x² - y) * ln Cx ; y = x²
+C) x = ln Cx
+D) 1 + e^y = C(1 + x²)
+To‘g‘ri javob: A
+`;
+
+    const extraQuestions = String.raw`
+97-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? x*√(1 + y²) + yy'*√(1 + x²) = 0
+A) √(1 + x²) + √(1 + y²) = C
+B) √(1 - x²) + √(1 - y²) = C
+C) (x - y) * ln Cx = x
+D) e^x = C * (1 - e^(-y))
+To‘g‘ri javob: A
+
+98-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? x*√(1 - y²) + y*√(1 - x²) dy = 0
+A) √(1 - x²) + √(1 - y²) = C
+B) y² * (1 - y) = (x + C)² ; y = 1
+C) (x - y) * ln Cx = x
+D) 1 + e^y = C * (1 + x²)
+To‘g‘ri javob: A
+
+99-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? e^(-y) * (1 + y') = 1
+A) e^x = C * (1 - e^(-y))
+B) 1 + e^y = C * (1 + x²)
+C) y² * (1 - y) = (x + C)² ; y = 1
+D) (x - y) * ln Cx = x
+To‘g‘ri javob: A
+
+100-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y * ln y dx + x dy = 0 , y(1) = 1
+A) y = 1
+B) y = x
+C) y = 2
+D) y = 3
+To‘g‘ri javob: A
+
+101-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' = a^(x+y) (a > 0, a ≠ 1)
+A) a^x + a^(-y) = C
+B) e^x + a^y = C
+C) a^x + e^(-y) = C
+D) e^x + e^(-2y) = Ca
+To‘g‘ri javob: A
+
+102-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? e^y * (1 + x²)dy - 2x * (1 + e^y)dx = 0
+A) 1 + e^y = C * (1 + x²)
+B) y² * (1 - y) = (x + C)² ; y = 1
+C) x² = (x² - y) * ln Cx ; y = x²
+D) (x - y) * ln Cx = x
+To‘g‘ri javob: A
+
+103-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? 2x * √(1 - y²) = y' * (1 + x²)
+A) y = sin[ C + ln(1 + x²) ]
+B) y = (1 + Cy + ln y) * cos x
+C) y = tg( ln Cx )
+D) (x - y) * ln Cx = x
+To‘g‘ri javob: A
+
+104-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? e^x * sin³ y + (1 + e^(2x)) * cos y * y' = 0
+A) arctg(e^x) = 1 / (2 * sin² y) + C
+B) (x - y) * ln Cx = x
+C) y = (1 + Cy + ln y) * cos x
+D) y = tg( ln Cx )
+To‘g‘ri javob: A
+
+105-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y² * sin x dx + cos² x * ln y dy = 0
+A) y = (1 + Cy + ln y) * cos x
+B) x + y = atg( C + y/a )
+C) y = (1 + Cy + ln y) * cos x
+D) y = x * (C - ln x)
+To‘g‘ri javob: A
+
+106-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' = sin(x - y)
+A) x + C = ctg( (y - x)/2 + π/4 )
+B) tgy / 2 = e^x * sin x
+C) 1 + e^y = C * (1 + x²)
+D) y = tg( ln Cx )
+To‘g‘ri javob: A
+
+107-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' = ax + by + c
+A) b * (ax + by + c) = C * e^(bx)
+B) b * (by + c) = C * e^(2x)
+C) b * (ax + c) = Cx
+D) by = C * e^(-2x)
+To‘g‘ri javob: A
+
+108-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (x + y)² * y' = a²
+A) x + y = atg( C + y/a )
+B) y = (1 + Cy + ln y) * cos x
+C) y² * (1 - y) = (x + C)² ; y = 1
+D) y = tg( ln Cx )
+To‘g‘ri javob: A
+
+109-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y + xy' = a * (1 + xy') , y(1/a) = -a
+A) y = -1 / x
+B) y = sin x
+C) y = cos x
+D) y = e^x
+To‘g‘ri javob: A
+
+110-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (a² + y²)dx + 2x * √(ax - x²) dy = 0 , y(a) = 0
+A) y = atg( √(a/x - 1) )
+B) 2y = a + Ctg x
+C) y = tg( √(ax - 1) )
+D) Cy = tgax
+To‘g‘ri javob: A
+
+111-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + sin(x - y) = sin(x + y) , y(π) = π/2
+A) tgy / 2 = e² * sin x
+B) 1 + e^y = C * (1 + x²)
+C) y = tg( ln Cx )
+D) x² = (x² - y) * ln Cx ; y = x²
+To‘g‘ri javob: A
+
+112-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' = y + x * cos²(y / x)
+A) tg(y / x) = ln Cx
+B) y = (1 + Cy + ln y) * cos x
+C) y = x * e^(1 + Cx)
+D) y + √(y² - x²) = Cx²
+To‘g‘ri javob: A
+
+113-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (x - y)dx + xdy = 0
+A) y = x * (C - ln x)
+B) tg(y / x) = ln Cx
+C) y = (1 + Cy + ln y) * cos x
+D) y = x * e^(1 + Cx)
+To‘g‘ri javob: A
+
+114-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' = y * (ln y - ln x)
+A) y = x * e^(1 + Cx)
+B) 1 + e^y = C * (1 + x²)
+C) y + √(y² - x²) = Cx²
+D) y² - 3xy + 2x² = C
+To‘g‘ri javob: A
+
+115-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? x²dy = (y² - xy + x²)dx
+A) (x - y) * ln Cx = x
+B) y = (C + x²) * e^x
+C) (x - y) * ln Cx = x
+D) y + √(y² - x²) = Cx²
+To‘g‘ri javob: A
+
+116-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' = y + √(y² - x²)
+A) y + √(y² - x²) = Cx²
+B) y² * (1 - y) = (x + C)² ; y = 1
+C) x² = (x² - y) * ln Cx ; y = x²
+D) y = Ce^(-2x) + e^(-x)
+To‘g‘ri javob: A
+
+117-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? 2x²y' = x² + y²
+A) 2x = (x - y) * ln Cx
+B) y² - 3xy + 2x² = C
+C) (x - y) * ln Cx = x
+D) x = C / y + y * ln y
+To‘g‘ri javob: A
+
+118-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (4x - 3y)dx + (2y - 3x)dy = 0
+A) y² - 3xy + 2x² = C
+B) (x - y) * ln Cx = x
+C) x = C / y + y * ln y
+D) y = Ce^(-2x) + e^(-x)
+To‘g‘ri javob: A
+
+119-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (y - x)dx + (y + x)dy = 0
+A) y² + 2xy - x² = C
+B) 1 + e^y = C * (1 + x²)
+C) y² * (1 - y) = (x + C)² ; y = 1
+D) x² = (x² - y) * ln Cx ; y = x²
+To‘g‘ri javob: A
+
+120-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2y = e^x
+A) x² = (x² - y) * ln Cx ; y = x²
+B) (x - y) * ln Cx = x
+C) y = Cx - x²
+D) y = (C + x²) * e^x
+To‘g‘ri javob: A
+
+121-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? x² + xy' = y , y(1) = 0
+A) y = x - x²
+B) y = e^x - 2
+C) y = x + ln x
+D) y = 1 - x²
+To‘g‘ri javob: A
+
+122-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - 2xy = 2x * e^(x²)
+A) y = (C + x²) * e^(x²)
+B) (x - y) * ln Cx = x
+C) y = (C + x³) * ln x
+D) 1 + e^y = C * (1 + x²)
+To‘g‘ri javob: A
+
+123-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2xy = e^(-x²)
+A) y = (C + x) * e^(-x²)
+B) y² * (1 - y) = (x + C)² ; y = 1
+C) x² = (x² - y) * ln Cx ; y = x²
+D) y = (C + x³) * ln x
+To‘g‘ri javob: A
+
+124-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' * cos x - y * sin x = 2x , y(0) = 0
+A) y = (x² / cos x)
+B) y = (1 + Cy + ln y) * cos x
+C) 1 + e^y = C * (1 + x²)
+D) (x - y) * ln Cx = x
+To‘g‘ri javob: A
+
+125-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' - 2y = x³ * cos x
+A) y = Cx² + x² * sin x
+B) y = (x² / cos x)
+C) y = (1 + Cy + ln y) * cos x
+D) y = (sin x / cos² x)
+To‘g‘ri javob: A
+
+126-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y * tg x = (1 / cos³ x) , y(0) = 0
+A) y = (sin x / cos² x)
+B) y = (1 + Cy + ln y) * cos x
+C) y = tg(ln Cx)
+D) x² = (x² - y) * ln Cx ; y = x²
+To‘g‘ri javob: A
+
+127-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' * x * ln x - y = 3x³ * ln² x
+A) y = (C + x³) * ln x
+B) 1 + e^y = C * (1 + x²)
+C) y = Cx² + x² * sin x
+D) y = (x² / cos x)
+To‘g‘ri javob: A
+
+128-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (2x - y²) * y' = 2y
+A) x = Cy - y² / 2
+B) y = (C + x²) * e^x
+C) x² = (x² - y) * ln Cx ; y = x²
+D) y' + 2xy = 2xy²
+To‘g‘ri javob: A
+
+129-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + y * cos x = cos x , y(0) = 1
+A) y = 1
+B) y = sin x
+C) y = cos x
+D) y = e^x
+To‘g‘ri javob: A
+
+130-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' = (y / (2y * ln y + y - x))
+A) x = C / y + y * ln y
+B) y² * (1 - y) = (x + C)² ; y = 1
+C) (x - y) * ln Cx = x
+D) x = (C + y) * e^(-y²/2)
+To‘g‘ri javob: A
+`;
+  </script>
+  <script>
+    const tailQuestions = String.raw`
+131-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (e^(-y²/2) - xy)dy - dx = 0
+A) x = (C + y) * e^(-y²/2)
+B) y = (C + x) * e^((1-x)e^x)
+C) 1 + e^y = C * (1 + x²)
+D) y' + 2xy = 2xy²
+To‘g‘ri javob: A
+
+132-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y * e^x = 2x * e^x
+A) y = (C + x²) * e^(e^x)
+B) x² = (x² - y) * ln Cx ; y = x²
+C) y² * ln x = C + sin x
+D) y = (1 + Cy + ln y) * cos x
+To‘g‘ri javob: A
+
+133-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + x * e^x * y = e^((1-x)e^x)
+A) y = (C + x) * e^((1-x)e^x)
+B) 1 + e^y = C * (1 + x²)
+C) (x - y) * ln Cx = x
+D) y = (C + x²) * e^(e^x)
+To‘g‘ri javob: A
+
+134-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2xy = 2xy²
+A) y = 1 / (1 + C * e^(x²))
+B) y = (C + x) * e^((1-x)e^x)
+C) 1 + e^y = C * (1 + x²)
+D) (x - y) * ln Cx = x
+To‘g‘ri javob: A
+
+135-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - (x * y) / (1 - x²) = (1 / (1 - x²)) , y(0) = 1
+A) y = x + √(1 - x²)
+B) y = x - √(1 - x²)
+C) y = (C + x²) * e^x
+D) y = 1 / (1 + C * e^(x²))
+To‘g‘ri javob: A
+
+136-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - 2xy = x * e^(x²) * sin x , y(0) = 1
+A) y = (1 - cos x) * e^(x²)
+B) y = (1 + cos x) * e^(x²)
+C) y = (C + x) * e^(-x²)
+D) y = Cx² + x² * sin x
+To‘g‘ri javob: A
+
+137-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y * tg x = ctg x * cos x
+A) y = (C - cos x) / cos x
+B) y = (1 + Cy + ln y) * cos x
+C) y = (x² / cos x)
+D) y = (sin x / cos² x)
+To‘g‘ri javob: A
+
+138-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? x² * y' + 2xy = ln x , y(1) = -1
+A) y = (x * ln x - x) / x²
+B) y = (x * ln x + x) / x²
+C) y = x - x²
+D) y = x + ln x
+To‘g‘ri javob: A
+
+139-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 3y = e^(2x)
+A) y = C * e^(-3x) + (1 / 5) * e^(2x)
+B) y = C * e^(3x) + (1 / 5) * e^(2x)
+C) y = (C + x²) * e^x
+D) y = Cx - x²
+To‘g‘ri javob: A
+
+140-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + y = x
+A) y = C * e^(-x) + x - 1
+B) y = C * e^x + x + 1
+C) y = x - x²
+D) y = 1 - x²
+To‘g‘ri javob: A
+
+141-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - (2y / x) = x³
+A) y = C * x² + x⁴ / 2
+B) y = C * x² - x⁴ / 2
+C) y = Cx² + x² * sin x
+D) y = (x² / cos x)
+To‘g‘ri javob: A
+
+142-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' - 2y = 2x⁴
+A) y = C * x² + x⁴
+B) y = C * x² - x⁴
+C) y = (C + x³) * ln x
+D) y = Cx² + x² * sin x
+To‘g‘ri javob: A
+
+143-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' + y = -x²
+A) y = C / x - x² / 3
+B) y = C / x + x² / 3
+C) y = x - x²
+D) y = 1 - x²
+To‘g‘ri javob: A
+
+144-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + y * tg x = cos² x
+A) y = C * cos x + sin x * cos x
+B) y = C * cos x - sin x * cos x
+C) y = tg(ln Cx)
+D) y = (sin x / cos² x)
+To‘g‘ri javob: A
+
+145-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + y * ctg x = 2x
+A) y = C / sin x + x² / sin x
+B) y = C / sin x - x² / sin x
+C) y = (1 + Cy + ln y) * cos x
+D) y = tg(ln Cx)
+To‘g‘ri javob: A
+
+146-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' - y = x * sin x
+A) y = Cx - x * cos x
+B) y = Cx + x * cos x
+C) y = Cx² + x² * sin x
+D) y = (x² / cos x)
+To‘g‘ri javob: A
+
+147-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (x² + 1) * y' + 2xy = x³
+A) y = C / (x² + 1) + x⁴ / (4 * (x² + 1))
+B) y = C / (x² + 1) - x⁴ / (4 * (x² + 1))
+C) 1 + e^y = C * (1 + x²)
+D) x² = (x² - y) * ln Cx ; y = x²
+To‘g‘ri javob: A
+
+148-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - (y / x) = x * e^x
+A) y = Cx + x * e^x
+B) y = Cx - x * e^x
+C) y = (C + x²) * e^x
+D) y = (C + x³) * ln x
+To‘g‘ri javob: A
+
+149-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y = e^x
+A) y = (C + x) * e^x
+B) y = (C - x) * e^x
+C) y = (C + x²) * e^x
+D) y = e^x
+To‘g‘ri javob: A
+
+150-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2xy = 2x * e^(-x²)
+A) y = (C + x²) * e^(-x²)
+B) y = (C - x²) * e^(-x²)
+C) y = (C + x) * e^(-x²)
+D) y = (C + x³) * ln x
+To‘g‘ri javob: A
+`;
+  </script>
+  <script>
+    const moreQuestions = String.raw`
+151-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y = xy²
+A) y = 1 / (C * e^(-x) - x - 1)
+B) y = C * e^(-x) + x - 1
+C) y = 1 / (1 + C * e^(x²))
+D) y = (C + x) * e^x
+To‘g‘ri javob: A
+
+152-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2xy = 2x³y³
+A) y² = 1 / (C * e^(2x²) + x² + 1/2)
+B) y = (C + x²) * e^(-x²)
+C) y = 1 / (1 + C * e^(x²))
+D) y² * (1 - y) = (x + C)² ; y = 1
+To‘g‘ri javob: A
+
+153-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + y = x * √y
+A) y = (x - 2 + C * e^(-x/2))²
+B) y = C * e^(-x) + x - 1
+C) y = (C + x) * e^x
+D) y = 1 / (C * e^(-x) - x - 1)
+To‘g‘ri javob: A
+
+154-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y * tg x = -y² * cos x
+A) y = 1 / ((C + x) * cos x)
+B) y = (sin x / cos² x)
+C) y = (1 + Cy + ln y) * cos x
+D) y = tg(ln Cx)
+To‘g‘ri javob: A
+
+155-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' + y = y² * ln x
+A) y = 1 / (ln x + 1 + Cx)
+B) y = (C + x³) * ln x
+C) y = Cx² + x² * sin x
+D) x = C / y + y * ln y
+To‘g‘ri javob: A
+
+156-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2y / x = 3x² * ∛y
+A) y = (x³ / 2 + C / ∛x⁴)^(3/2)
+B) y = C * x² + x⁴ / 2
+C) y = C * x² - x⁴ / 2
+D) y = (C + x³) * ln x
+To‘g‘ri javob: A
+
+157-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? x * dx = (x² / y - y³) dy
+A) x² = y² * (C - y²)
+B) x² * (1 + y²) = C
+C) 1 + e^y = C * (1 + x²)
+D) y² - 3xy + 2x² = C
+To‘g‘ri javob: A
+
+158-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' - 2x² * √y = 4y
+A) y = x⁴ * (C + ln x)²
+B) y = (C + x) * e^(-x²)
+C) y = (x³ / 2 + C / ∛x⁴)^(3/2)
+D) y = (C + x³) * ln x
+To‘g‘ri javob: A
+
+159-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' + 2y = x⁵y²
+A) y = 1 / (C * x² - x⁵ / 3)
+B) y = C * x² + x⁴ / 2
+C) y = C * x² - x⁴ / 2
+D) y = 1 / (ln x + 1 + Cx)
+To‘g‘ri javob: A
+
+160-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (1 - x²)y' - xy = xy²
+A) y = 1 / (C * √(1 - x²) - 1)
+B) y = x + √(1 - x²)
+C) y = x - √(1 - x²)
+D) y = 1 / (1 + C * e^(x²))
+To‘g‘ri javob: A
+
+161-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + x / y = x / y²
+A) y = 1 + C * e^(-x²/2)
+B) y = 1 + C * e^(x²/2)
+C) y = 1 / (1 + C * e^(x²))
+D) y = (C + x²) * e^(x²)
+To‘g‘ri javob: A
+
+162-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - 2y * ctg x = 3 / y
+A) y² = C * sin⁴ x - 3 * sin² x
+B) y = C / sin x + x² / sin x
+C) y = C * cos x + sin x * cos x
+D) y = C * cos x - sin x * cos x
+To‘g‘ri javob: A
+
+163-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? 2y' + y * cos x = y^(-1) * cos x * (1 + sin x)
+A) y² = 1 + sin x + C * e^(-sin x)
+B) y = 1 + C * e^(-x²/2)
+C) y = C * cos x + sin x * cos x
+D) y = C * cos x - sin x * cos x
+To‘g‘ri javob: A
+
+164-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y = 2x * y² , y(0) = 1
+A) y = 1 / (3 * e^(-x) - 2x - 2)
+B) y = 1 / (C * e^(-x) - x - 1)
+C) y = C * e^(-x) + x - 1
+D) y = 1 / (1 + C * e^(x²))
+To‘g‘ri javob: A
+
+165-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y = 2x * e^x * y² , y(0) = 1
+A) y = e^x / (1 - x² * e^(2x))
+B) y = 1 / (C * e^(-x) - x - 1)
+C) y = (C + x²) * e^x
+D) y = C * e^(-3x) + (1 / 5) * e^(2x)
+To‘g‘ri javob: A
+
+166-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2y = e^x * y² , y(0) = 1
+A) y = e^(-2x) / (e^(-x) - 1/3 * e^x + 1/3)
+B) y = 1 / (C * e^(-x) - x - 1)
+C) y = (C + x) * e^(-x²)
+D) y = C * x² + x⁴ / 2
+To‘g‘ri javob: A
+
+167-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2xy = 2x³y³ , y(0) = 1
+A) y² = 1 / (x² + 1/2 + 1/2 * e^(2x²))
+B) y = 1 / (1 + C * e^(x²))
+C) y = (C + x²) * e^(x²)
+D) y = C * x² - x⁴ / 2
+To‘g‘ri javob: A
+
+168-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - y * tg x = -y² * cos x , y(0) = 1
+A) y = 1 / ((1 - x) * cos x)
+B) y = 1 / ((C + x) * cos x)
+C) y = (sin x / cos² x)
+D) y = tg(ln Cx)
+To‘g‘ri javob: A
+
+169-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + y = x * √y , y(0) = 1
+A) y = (x - 2 + 3 * e^(-x/2))²
+B) y = (x - 2 + C * e^(-x/2))²
+C) y = C * e^(-x) + x - 1
+D) y = 1 / (C * e^(-x) - x - 1)
+To‘g‘ri javob: A
+
+170-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' + y = y² * ln x , y(1) = 1
+A) y = 1 / (ln x + 1)
+B) y = 1 / (ln x + 1 + Cx)
+C) y = (C + x³) * ln x
+D) y = Cx² + x² * sin x
+To‘g‘ri javob: A
+
+171-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + 2y / x = 3x² * ∛y , y(1) = 1
+A) y = (x³ / 2 + 1 / (2 * ∛x⁴))^(3/2)
+B) y = (x³ / 2 + C / ∛x⁴)^(3/2)
+C) y = C * x² + x⁴ / 2
+D) y = C * x² - x⁴ / 2
+To‘g‘ri javob: A
+
+172-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? x * dx = (x² / y - y³) dy , y(1) = 1
+A) x² = y² * (2 - y²)
+B) x² = y² * (C - y²)
+C) x² * (1 + y²) = C
+D) 1 + e^y = C * (1 + x²)
+To‘g‘ri javob: A
+
+173-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' - 2x² * √y = 4y , y(1) = 1
+A) y = x⁴ * (ln x + 1)²
+B) y = x⁴ * (C + ln x)²
+C) y = (C + x) * e^(-x²)
+D) y = (C + x³) * ln x
+To‘g‘ri javob: A
+
+174-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' + 2y = x⁵y² , y(1) = 1
+A) y = 1 / (4/3 * x² - x⁵ / 3)
+B) y = 1 / (C * x² - x⁵ / 3)
+C) y = C * x² + x⁴ / 2
+D) y = 1 / (ln x + 1 + Cx)
+To‘g‘ri javob: A
+
+175-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (1 - x²)y' - xy = xy² , y(0) = 1
+A) y = 1 / (2 * √(1 - x²) - 1)
+B) y = 1 / (C * √(1 - x²) - 1)
+C) y = x + √(1 - x²)
+D) y = x - √(1 - x²)
+To‘g‘ri javob: A
+
+176-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + x / y = x / y² , y(0) = 2
+A) y = 1 + C * e^(-x²/2)
+B) y = 1 + C * e^(x²/2)
+C) y = 1 / (1 + C * e^(x²))
+D) y = (C + x²) * e^(x²)
+To‘g‘ri javob: A
+
+177-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - 2y * ctg x = 3 / y , y(π/2) = 1
+A) y² = 4 * sin⁴ x - 3 * sin² x
+B) y² = C * sin⁴ x - 3 * sin² x
+C) y = C / sin x + x² / sin x
+D) y = C * cos x + sin x * cos x
+To‘g‘ri javob: A
+
+178-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? 2y' + y * cos x = y^(-1) * cos x * (1 + sin x) , y(0) = 2
+A) y² = 1 + sin x + 3 * e^(-sin x)
+B) y² = 1 + sin x + C * e^(-sin x)
+C) y = 1 + C * e^(-x²/2)
+D) y = C * cos x + sin x * cos x
+To‘g‘ri javob: A
+
+179-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - 2y * ctg x = 3 / y , y(π/2) = -1
+A) y² = C * sin⁴ x - 3 * sin² x
+B) y² = 4 * sin⁴ x - 3 * sin² x
+C) y = C / sin x + x² / sin x
+D) y = C * cos x + sin x * cos x
+To‘g‘ri javob: A
+
+180-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? 2y' + y * cos x = y⁻¹ * cos x * (1 + sin x) , y(0) = -2
+A) y² = 1 + sin x + 3 * e^(-sin x)
+B) y² = 1 + sin x + C * e^(-sin x)
+C) y = 1 + C * e^(-x²/2)
+D) y = C * cos x + sin x * cos x
+To‘g‘ri javob: B
+
+181-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (x + 1) * (y' + y²) = -y
+A) y = 1 / ((x + 1) * (C + ln|x + 1|))
+B) y = 1 / (ln x + 1 + Cx)
+C) y = 1 / (C * e^(-x) - x - 1)
+D) y = C * e^(-x) + x - 1
+To‘g‘ri javob: A
+
+182-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' = (x / (x² * y + y³))
+A) x² + y² + 1 = C * e^(y²)
+B) x² = y² * (C - y²)
+C) x² * (1 + y²) = C
+D) 1 + e^y = C * (1 + x²)
+To‘g‘ri javob: A
+
+183-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? xy' + y = y² * (x * cos x - sin x)
+A) y = 1 / (sin x + C * x)
+B) y = Cx² + x² * sin x
+C) y = (1 + Cy + ln y) * cos x
+D) y = tg(ln Cx)
+To‘g‘ri javob: A
+
+184-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? (1 - x²) * y' - xy = a * x * y²
+A) y = 1 / (C * √(1 - x²) - a)
+B) y = 1 / (C * √(1 - x²) - 1)
+C) y = x + √(1 - x²)
+D) y = x - √(1 - x²)
+To‘g‘ri javob: A
+
+185-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + (2 / x) * y = (2 / x) * √(1 + y²)
+A) y = tg(ln Cx) / 2
+B) y = (1 / 2) * (C * x² - 1 / (C * x²))
+C) y = tg(ln Cx)
+D) y = x * (C - ln x)
+To‘g‘ri javob: B
+
+186-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - (1 / x) * y = (1 / x) * √(1 + y²)
+A) y = (1 / 2) * (C * x - 1 / (C * x))
+B) y = (1 / 2) * (C * x² - 1 / (C * x²))
+C) y = tg(ln Cx)
+D) y = x * (C - ln x)
+To‘g‘ri javob: A
+
+187-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + (1 / x) * y = (1 / x) * √(1 + y²)
+A) y = (1 / 2) * (C / x - x / C)
+B) y = (1 / 2) * (C * x - 1 / (C * x))
+C) y = tg(ln Cx)
+D) y = x * (C - ln x)
+To‘g‘ri javob: A
+
+188-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - (2 / x) * y = (2 / x) * √(1 + y²)
+A) y = (1 / 2) * (C * x² - 1 / (C * x²))
+B) y = (1 / 2) * (C * x - 1 / (C * x))
+C) y = tg(ln Cx)
+D) y = x * (C - ln x)
+To‘g‘ri javob: A
+
+189-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - (1 / x) * y = (1 / x) * √(1 + y²) , y(1) = 0
+A) y = (1 / 2) * (x - 1 / x)
+B) y = (1 / 2) * (C * x - 1 / (C * x))
+C) y = (1 / 2) * (C * x² - 1 / (C * x²))
+D) y = tg(ln Cx)
+To‘g‘ri javob: A
+
+190-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' + (1 / x) * y = (1 / x) * √(1 + y²) , y(1) = 0
+A) y = (1 / 2) * (1 / x - x)
+B) y = (1 / 2) * (C / x - x / C)
+C) y = (1 / 2) * (C * x - 1 / (C * x))
+D) y = tg(ln Cx)
+To‘g‘ri javob: A
+
+191-Savol: Differensial tenglamaning umumiy yechimi qaysi qatorda to‘g‘ri ko‘rsatilgan? y' - (2 / x) * y = (2 / x) * √(1 + y²) , y(1) = 0
+A) y = (1 / 2) * (x² - 1 / x²)
+B) y = (1 / 2) * (C * x² - 1 / (C * x²))
+C) y = (1 / 2) * (C * x - 1 / (C * x))
+D) y = tg(ln Cx)
+To‘g‘ri javob: A
+`;
+  </script>
+  <script>
+    const finalQuestions = String.raw`
+192-Savol: n-tartibli differensial tenglamaning umumiy ko'rinishi qaysi qatorda berilgan?
+A) F(x, y, y', ... , y⁽ⁿ⁾) = 0
+B) y⁽ⁿ⁾ = f(x, y, y', ... , y⁽ⁿ⁻¹⁾)
+C) φ(x, y, c₁ , ... , cₙ) = 0
+D) y = φ(x)
+To‘g‘ri javob: A
+
+193-Savol: n-tartibli hosilaga nisbatan yechilgan differensial tenglamaning ko'rinishi qaysi qatorda berilgan?
+A) y⁽ⁿ⁾ = f(x, y, y', ... , y⁽ⁿ⁻¹⁾)
+B) F(x, y, y', ... , y⁽ⁿ⁾) = 0
+C) φ(x, y, c₁ , ... , cₙ) = 0
+D) y = φ(x)
+To‘g‘ri javob: A
+
+194-Savol: n-tartibli oddiy differensial tenglamaning Koshi masalasi (boshlang'ich masala) ko'rinishi qaysi qatorda to'g'ri berilgan?
+A) y⁽ⁿ⁾ = f(x, y, y', ... , y⁽ⁿ⁻¹⁾) ; y(x₀) = y₀ , y'(x₀) = y'₀ , ... , y⁽ⁿ⁻¹⁾(x₀) = y₀⁽ⁿ⁻¹⁾
+B) F(x, y, y', ... , y⁽ⁿ⁾) = 0 ; y(x₀) = y₀ , y'(x₀) = y'₀
+C) φ(x, y, c₁ , ... , cₙ) = 0 ; y(x₀) = y₀
+D) y = φ(x) ; y(x₀) = y₀
+To‘g‘ri javob: A
+
+195-Savol: n-tartibli differensial tenglamaning Koshi masalasi yechimining mavjudligi va yagonaligi haqidagi teorema kimning nomi bilan ataladi?
+A) Pikkar (Koshi) teoremasi
+B) Peano teoremasi
+C) Osgud teoremasi
+D) Eyler teoremasi
+To‘g‘ri javob: A
+
+196-Savol: y⁽ⁿ⁾ = f(x, y, y', ... , y⁽ⁿ⁻¹⁾) tenglamaning o'ng tomonidagi f funksiya x₀, y₀, y'₀, ... , y₀⁽ⁿ⁻¹⁾ nuqtaning biror atrofida uzluksiz bo'lsa, Koshi masalasining yechimi mavjudligi haqidagi teorema kimning nomi bilan ataladi?
+A) Peano teoremasi
+B) Pikkar teoremasi
+C) Koshi teoremasi
+D) Osgud teoremasi
+To‘g‘ri javob: A
+
+197-Savol: n-tartibli differensial tenglamaning ixtiyoriy o'zgarmaslar c₁, c₂, ... , c_n larni saqlagan va tenglamani ayniyatga aylantiradigan y = φ(x, c₁, c₂, ... , c_n) funksiyaga tenglamaning...
+A) Umumiy yechimi deyiladi
+B) Xususiy yechimi deyiladi
+C) Maxsus yechimi deyiladi
+D) Umumiy integrali deyiladi
+To‘g‘ri javob: A
+
+198-Savol: n-tartibli differensial tenglamaning ixtiyoriy o'zgarmaslar c₁, c₂, ... , c_n larni saqlagan va tenglamani ayniyatga aylantiradigan oshkormas ko'rinishdagi Φ(x, y, c₁, c₂, ... , c_n) = 0 munosabatga tenglamaning...
+A) Umumiy integrali deyiladi
+B) Xususiy integrali deyiladi
+C) Maxsus integrali deyiladi
+D) Umumiy yechimi deyiladi
+To‘g‘ri javob: A
+
+199-Savol: n-tartibli differensial tenglamaning umumiy yechimidan ixtiyoriy o'zgarmaslar c₁, c₂, ... , c_n larga aniq qiymatlar berishdan hosil bo'ladigan yechimga tenglamaning...
+A) Xususiy yechimi deyiladi
+B) Umumiy yechimi deyiladi
+C) Maxsus yechimi deyiladi
+D) Singular yechimi deyiladi
+To‘g‘ri javob: A
+
+200-Savol: y⁽ⁿ⁾ = f(x) ko'rinishdagi differensial tenglamaning tartibini pasaytirish uchun ketma-ket necha marta integrallash lozim?
+A) n marta
+B) n-1 marta
+C) n-2 marta
+D) 1 marta
+To‘g‘ri javob: A
+
+201-Savol: F(x, y⁽ᵏ⁾, y⁽ᵏ⁺¹⁾, ... , y⁽ⁿ⁾) = 0 ko'rinishdagi differensial tenglamaning tartibini k birlikka pasaytirish uchun qanday almashtirish bajarish lozim?
+A) y⁽ᵏ⁾ = z
+B) y' = z
+C) y = z
+D) y⁽ⁿ⁻¹⁾ = z
+To‘g‘ri javob: A
+
+202-Savol: F(y, y', ... , y⁽ⁿ⁾) = 0 ko'rinishdagi differensial tenglamaning tartibini bitta birlikka pasaytirish uchun qanday almashtirish bajarish lozim?
+A) y' = p(y)
+B) y' = z(x)
+C) y = z
+D) y'' = p(y)
+To‘g‘ri javob: A
+
+203-Savol: F(x, y', y'') = 0 ko'rinishdagi differensial tenglamaning tartibini bitta birlikka pasaytirish uchun qanday almashtirish bajarish lozim?
+A) y' = p(x)
+B) y' = p(y)
+C) y = z
+D) y'' = p(y)
+To‘g‘ri javob: A
+
+204-Savol: n-tartibli o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning umumiy ko'rinishi qaysi qatorda to'g'ri berilgan?
+A) y⁽ⁿ⁾ + a₁y⁽ⁿ⁻¹⁾ + ... + aₙ₋₁y' + aₙy = 0
+B) y⁽ⁿ⁾ + a₁y⁽ⁿ⁻¹⁾ + ... + aₙ₋₁y' + aₙy = f(x)
+C) y⁽ⁿ⁾ + p₁(x)y⁽ⁿ⁻¹⁾ + ... + pₙ₋₁(x)y' + pₙ(x)y = 0
+D) y⁽ⁿ⁾ + p₁(x)y⁽ⁿ⁻¹⁾ + ... + pₙ₋₁(x)y' + pₙ(x)y f(x)
+To‘g‘ri javob: A
+
+205-Savol: n-tartibli o'zgarmas koeffitsientli chiziqli bir jinslimas differensial tenglamaning umumiy ko'rinishi qaysi qatorda to'g'ri berilgan?
+A) y⁽ⁿ⁾ + a₁y⁽ⁿ⁻¹⁾ + ... + aₙ₋₁y' + aₙy = f(x)
+B) y⁽ⁿ⁾ + a₁y⁽ⁿ⁻¹⁾ + ... + aₙ₋₁y' + aₙy = 0
+C) y⁽ⁿ⁾ + p₁(x)y⁽ⁿ⁻¹⁾ + ... + pₙ₋₁(x)y' + pₙ(x)y = 0
+D) y⁽ⁿ⁾ + p₁(x)y⁽ⁿ⁻¹⁾ + ... + pₙ₋₁(x)y' + pₙ(x)y = f(x)
+To‘g‘ri javob: A
+
+206-Savol: n-tartibli o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning xarakteristik tenglamasi qaysi qatorda to'g'ri berilgan?
+A) λⁿ + a₁λⁿ⁻¹ + ... + aₙ₋₁λ + aₙ = 0
+B) λⁿ + a₁λⁿ⁻¹ + ... + aₙ₋₁λ + aₙ = f(x)
+C) λⁿ + p₁(x)λⁿ⁻¹ + ... + pₙ₋₁(x)λ + pₙ(x) = 0
+D) λⁿ + a₁λⁿ⁻¹ + ... + aₙ₋₁λ = 0
+To‘g‘ri javob: A
+
+207-Savol: Agar xarakteristik tenglamaning ildizlari haqiqiy va har xil λ₁, λ₂, ... , λ_n bo'lsa, o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning umumiy yechimi qaysi qatorda to'g'ri berilgan?
+A) y = c₁ * e^(λ₁x) + c₂ * e^(λ₂x) + ... + c_n * e^(λ_n x)
+B) y = (c₁ + c₂x + ... + c_n xⁿ⁻¹) * e^(λ₁x)
+C) y = c₁ * cos λ₁x + c₂ * sin λ₁x
+D) y = e^(αx) * (c₁ * cos βx + c₂ * sin βx)
+To‘g‘ri javob: A
+
+208-Savol: Agar xarakteristik tenglamaning ildizlari haqiqiy va karrali λ₁ = λ₂ = ... = λ_n = λ bo'lsa, o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning umumiy yechimi qaysi qatorda to'g'ri berilgan?
+A) y = (c₁ + c₂x + ... + c_n xⁿ⁻¹) * e^(λx)
+B) y = c₁ * e^(λ₁x) + c₂ * e^(λ₂x) + ... + c_n * e^(λ_n x)
+C) y = c₁ * cos λx + c₂ * sin λx
+D) y = e^(αx) * (c₁ * cos βx + c₂ * sin βx)
+To‘g‘ri javob: A
+
+209-Savol: Agar ikkinchi tartibli xarakteristik tenglamaning ildizlari kompleks λ₁,₂ = α ± iβ bo'lsa, o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning umumiy yechimi qaysi qatorda to'g'ri berilgan?
+A) y = e^(αx) * (c₁ * cos βx + c₂ * sin βx)
+B) y = c₁ * e^(λ₁x) + c₂ * e^(λ₂x)
+C) y = (c₁ + c₂x) * e^(λx)
+D) y = c₁ * cos βx + c₂ * sin βx
+To‘g‘ri javob: A
+
+210-Savol: Agar n-tartibli o'zgarmas koeffitsientli chiziqli bir jinslimas differensial tenglamaning o'ng tomoni f(x) = P_m(x) * e^(αx) ko'rinishda bo'lib, α soni xarakteristik tenglamaning k karrali ildizi bo'lsa, u holda xususiy yechim qanday ko'rinishda qidiriladi?
+A) y* = xᵏ * Q_m(x) * e^(αx)
+B) y* = Q_m(x) * e^(αx)
+C) y* = xᵏ * Q_m(x)
+D) y* = xᵏ * e^(αx)
+To‘g‘ri javob: A
+
+211-Savol: Agar n-tartibli o'zgarmas koeffitsientli chiziqli bir jinslimas differensial tenglamaning o'ng tomoni f(x) = P_m(x) * e^(αx) ko'rinishda bo'lib, α soni xarakteristik tenglamaning ildizi bo'lmasa, u holda xususiy yechim qanday ko'rinishda qidiriladi?
+A) y* = Q_m(x) * e^(αx)
+B) y* = x * Q_m(x) * e^(αx)
+C) y* = xᵏ * Q_m(x) * e^(αx)
+D) y* = Q_m(x)
+To‘g‘ri javob: A
+
+212-Savol: Agar n-tartibli o'zgarmas koeffitsientli chiziqli bir jinslimas differensial tenglamaning o'ng tomoni f(x) = e^(αx) * (P_m(x) * cos βx + Q_l(x) * sin βx) ko'rinishda bo'lib, α + iβ soni xarakteristik tenglamaning ildizi bo'lmasa, u holda xususiy yechim qanday ko'rinishda qidiriladi? (bunda k = max(m,l))
+A) y* = e^(αx) * (M_k(x) * cos βx + N_k(x) * sin βx)
+B) y* = x * e^(αx) * (M_k(x) * cos βx + N_k(x) * sin βx)
+C) y* = xˢ * e^(αx) * (M_k(x) * cos βx + N_k(x) * sin βx)
+D) y* = M_k(x) * cos βx + N_k(x) * sin βx
+To‘g‘ri javob: A
+
+213-Savol: Agar n-tartibli o'zgarmas koeffitsientli chiziqli bir jinslimas differensial tenglamaning o'ng tomoni f(x) = e^(αx) * (P_m(x) * cos βx + Q_l(x) * sin βx) ko'rinishda bo'lib, α + iβ soni xarakteristik tenglamaning s karrali ildizi bo'lsa, u holda xususiy yechim qanday ko'rinishda qidiriladi? (bunda k = max(m,l))
+A) y* = xˢ * e^(αx) * (M_k(x) * cos βx + N_k(x) * sin βx)
+B) y* = e^(αx) * (M_k(x) * cos βx + N_k(x) * sin βx)
+C) y* = x * e^(αx) * (M_k(x) * cos βx + N_k(x) * sin βx)
+D) y* = xˢ * (M_k(x) * cos βx + N_k(x) * sin βx)
+To‘g‘ri javob: A
+
+214-Savol: Ikkinchi tartibli o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning umumiy ko'rinishi qaysi qatorda to'g'ri berilgan?
+A) y'' + p * y' + q * y = 0
+B) y'' + p * y' + q * y = f(x)
+C) y'' + p₁(x) * y' + p₂(x) * y = 0
+D) y'' + p₁(x) * y' + p₂(x) * y = f(x)
+To‘g‘ri javob: A
+
+215-Savol: Ikkinchi tartibli o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning xarakteristik tenglamasi qaysi qatorda to'g'ri berilgan?
+A) λ² + p * λ + q = 0
+B) λ² + p * λ + q = f(x)
+C) λ² + p₁(x) * λ + p₂(x) = 0
+D) λ² + p * λ = 0
+To‘g‘ri javob: A
+
+216-Savol: Agar xarakteristik tenglamaning ildizlari haqiqiy va har xil λ₁ ≠ λ₂ bo'lsa, ikkinchi tartibli o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning umumiy yechimi qaysi qatorda to'g'ri berilgan?
+A) y = c₁ * e^(λ₁x) + c₂ * e^(λ₂x)
+B) y = (c₁ + c₂x) * e^(λ₁x)
+C) y = c₁ * cos λ₁x + c₂ * sin λ₁x
+D) y = e^(αx) * (c₁ * cos βx + c₂ * sin βx)
+To‘g‘ri javob: A
+
+217-Savol: Agar xarakteristik tenglamaning ildizlari haqiqiy va o'zaro teng λ₁ = λ₂ = λ bo'lsa, ikkinchi tartibli o'zgarmas koeffitsientli chiziqli bir jinsli differensial tenglamaning umumiy yechimi qaysi qatorda to'g'ri berilgan?
+A) y = (c₁ + c₂x) * e^(λx)
+B) y = c₁ * e^(λx) + c₂ * e^(λx)
+C) y = c₁ * cos λx + c₂ * sin λx
+D) y = e^(αx) * (c₁ * cos βx + c₂ * sin βx)
+To‘g‘ri javob: A
+
+218-Savol: y'' - y' - 2y = 0 tenglamaning xarakteristik tenglamasini toping.
+A) λ² - λ - 2 = 0
+B) λ² + λ - 2 = 0
+C) λ² - λ + 2 = 0
+D) λ² + λ + 2 = 0
+To‘g‘ri javob: A
+
+219-Savol: y'' - y' - 2y = 0 tenglamaning xarakteristik ildizlarini toping.
+A) λ₁ = 2, λ₂ = -1
+B) λ₁ = -2, λ₂ = 1
+C) λ₁ = 2, λ₂ = 1
+D) λ₁ = -2, λ₂ = -1
+To‘g‘ri javob: A
+
+220-Savol: y'' - y' - 2y = 0 tenglamaning umumiy yechimini toping.
+A) y = c₁ * e^(2x) + c₂ * e^(-x)
+B) y = c₁ * e^(-2x) + c₂ * e^x
+C) y = c₁ * e^(2x) + c₂ * e^x
+D) y = c₁ * e^(-2x) + c₂ * e^(-x)
+To‘g‘ri javob: A
+
+221-Savol: y'' - 4y' + 4y = 0 tenglamaning xarakteristik tenglamasini toping.
+A) λ² - 4λ + 4 = 0
+B) λ² + 4λ + 4 = 0
+C) λ² - 4λ - 4 = 0
+D) λ² + 4λ - 4 = 0
+To‘g‘ri javob: A
+
+222-Savol: y'' - 4y' + 4y = 0 tenglamaning xarakteristik ildizlarini toping.
+A) λ₁ = λ₂ = 2
+B) λ₁ = λ₂ = -2
+C) λ₁ = 2, λ₂ = -2
+D) λ₁ = 1, λ₂ = 4
+To‘g‘ri javob: A
+
+223-Savol: y'' - 4y' + 4y = 0 tenglamaning umumiy yechimini toping.
+A) y = (c₁ + c₂x) * e^(2x)
+B) y = c₁ * e^(2x) + c₂ * e^(2x)
+C) y = c₁ * e^(2x) + c₂ * e^(-2x)
+D) y = (c₁ + c₂x) * e^(-2x)
+To‘g‘ri javob: A
+
+224-Savol: y'' + 4y' + 13y = 0 tenglamaning xarakteristik tenglamasini toping.
+A) λ² + 4λ + 13 = 0
+B) λ² - 4λ + 13 = 0
+C) λ² + 4λ - 13 = 0
+D) λ² - 4λ - 13 = 0
+To‘g‘ri javob: A
+
+225-Savol: y'' + 4y' + 13y = 0 tenglamaning xarakteristik ildizlarini toping.
+A) λ₁,₂ = -2 ± 3i
+B) λ₁,₂ = 2 ± 3i
+C) λ₁,₂ = -2 ± 9i
+D) λ₁,₂ = 2 ± 9i
+To‘g‘ri javob: A
+
+226-Savol: y'' + 4y' + 13y = 0 tenglamaning umumiy yechimini toping.
+A) y = e^(-2x) * (c₁ * cos 3x + c₂ * sin 3x)
+B) y = e^(2x) * (c₁ * cos 3x + c₂ * sin 3x)
+C) y = e^(-2x) * (c₁ * cos 9x + c₂ * sin 9x)
+D) y = c₁ * e^(-2x) + c₂ * e^(3x)
+To‘g‘ri javob: A
+
+227-Savol: Ikkinchi tartibli o'zgarmas koeffitsientli chiziqli bir jinslimas differensial tenglamaning umumiy ko'rinishi qaysi qatorda to'g'ri berilgan?
+A) y'' + p * y' + q * y = f(x)
+B) y'' + p * y' + q * y = 0
+C) y'' + p₁(x) * y' + p₂(x) * y = 0
+D) y'' + p₁(x) * y' + p₂(x) * y = f(x)
+To‘g‘ri javob: A
+`;
+
+    const allRaw = [rawQuestions, extraQuestions, tailQuestions, moreQuestions, finalQuestions].join("\n");
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function prettyMath(text) {
+      let html = escapeHtml(text.trim());
+      html = html.replace(/\*/g, "·");
+      html = html.replace(/\be\^\(([^()]+)\)/g, "e<sup>$1</sup>");
+      html = html.replace(/\ba\^\(([^()]+)\)/g, "a<sup>$1</sup>");
+      html = html.replace(/\b([xyλ])\^\(([^()]+)\)/g, "$1<sup>$2</sup>");
+      html = html.replace(/\b([axy])\^(-?[A-Za-z0-9αβ]+)\b/g, "$1<sup>$2</sup>");
+      html = html.replace(/exp\(([^)]+)\)/g, "e<sup>$1</sup>");
+      html = html.replace(/\bdx\b/g, "dx").replace(/\bdy\b/g, "dy");
+      return html;
+    }
+
+    function parseQuestions(raw) {
+      return raw.trim().split(/\n\s*\n(?=\d+-Savol:)/).map(block => {
+        const numberMatch = block.match(/^(\d+)-Savol:\s*([\s\S]*?)(?=\nA\))/);
+        const answerMatch = block.match(/To‘g‘ri javob:\s*([ABCD])/);
+        const optionMatches = [...block.matchAll(/\n([ABCD])\)\s*([\s\S]*?)(?=\n[ABCD]\)|\nTo‘g‘ri javob:|$)/g)];
+        if (!numberMatch || !answerMatch || optionMatches.length < 4) return null;
+        const correctLetter = answerMatch[1];
+        const options = optionMatches.map(match => ({
+          originalLetter: match[1],
+          text: match[2].trim(),
+          correct: match[1] === correctLetter
+        }));
+        return {
+          number: Number(numberMatch[1]),
+          question: numberMatch[2].trim(),
+          options,
+          selected: null,
+          locked: false,
+          shuffled: shuffle(options)
+        };
+      }).filter(Boolean).sort((a, b) => a.number - b.number);
+    }
+
+    function shuffle(items) {
+      const arr = items.map(item => ({ ...item }));
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    const questions = parseQuestions(allRaw);
+    let current = 0;
+
+    const questionNumber = document.getElementById("questionNumber");
+    const positionText = document.getElementById("positionText");
+    const questionText = document.getElementById("questionText");
+    const answers = document.getElementById("answers");
+    const feedback = document.getElementById("feedback");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const finishBtn = document.getElementById("finishBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const totalStat = document.getElementById("totalStat");
+    const answeredStat = document.getElementById("answeredStat");
+    const correctStat = document.getElementById("correctStat");
+    const wrongStat = document.getElementById("wrongStat");
+    const percentStat = document.getElementById("percentStat");
+    const progress = document.getElementById("progress");
+    const jumpGrid = document.getElementById("jumpGrid");
+    const resultBox = document.getElementById("resultBox");
+    const resultText = document.getElementById("resultText");
+    const review = document.getElementById("review");
+
+    function render() {
+      const q = questions[current];
+      questionNumber.textContent = `${q.number}-savol`;
+      positionText.textContent = `${current + 1} / ${questions.length}`;
+      questionText.innerHTML = prettyMath(q.question);
+      answers.innerHTML = "";
+      feedback.className = "feedback";
+      feedback.textContent = "";
+
+      q.shuffled.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "answer";
+        btn.disabled = q.locked;
+        btn.innerHTML = `<span class="letter">${String.fromCharCode(65 + index)}</span><span class="math">${prettyMath(option.text)}</span>`;
+        if (q.locked) {
+          if (option.correct) btn.classList.add("correct");
+          if (q.selected === option.text && !option.correct) btn.classList.add("wrong");
+        }
+        btn.addEventListener("click", () => selectAnswer(option));
+        answers.appendChild(btn);
+      });
+
+      if (q.locked) showFeedback(q);
+      prevBtn.disabled = current === 0;
+      nextBtn.textContent = current === questions.length - 1 ? "Oxirgi savol" : "Keyingi";
+      nextBtn.disabled = current === questions.length - 1;
+      updateStats();
+      renderJumps();
+    }
+
+    function selectAnswer(option) {
+      const q = questions[current];
+      if (q.locked) return;
+      q.selected = option.text;
+      q.locked = true;
+      render();
+    }
+
+    function showFeedback(q) {
+      const correct = q.options.find(option => option.correct);
+      const selected = q.options.find(option => option.text === q.selected);
+      const isCorrect = selected && selected.correct;
+      feedback.className = `feedback show ${isCorrect ? "good" : "bad"}`;
+      feedback.innerHTML = isCorrect
+        ? `<strong>To'g'ri.</strong> Javob: <span class="math">${prettyMath(correct.text)}</span>`
+        : `<strong>Xato.</strong> To'g'ri javob: <span class="math">${prettyMath(correct.text)}</span>`;
+    }
+
+    function updateStats() {
+      const answered = questions.filter(q => q.locked).length;
+      const correct = questions.filter(q => q.locked && q.options.find(o => o.text === q.selected)?.correct).length;
+      const wrong = answered - correct;
+      const percent = answered ? Math.round((correct / answered) * 100) : 0;
+      totalStat.textContent = questions.length;
+      answeredStat.textContent = answered;
+      correctStat.textContent = correct;
+      wrongStat.textContent = wrong;
+      percentStat.textContent = `${percent}%`;
+      progress.style.width = `${Math.round((answered / questions.length) * 100)}%`;
+    }
+
+    function renderJumps() {
+      jumpGrid.innerHTML = "";
+      questions.forEach((q, index) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "jump";
+        btn.textContent = q.number;
+        if (index === current) btn.classList.add("current");
+        if (q.locked) {
+          btn.classList.add("done");
+          const isCorrect = q.options.find(o => o.text === q.selected)?.correct;
+          btn.classList.add(isCorrect ? "correct" : "wrong");
+        }
+        btn.addEventListener("click", () => {
+          current = index;
+          render();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        jumpGrid.appendChild(btn);
+      });
+    }
+
+    function finishQuiz() {
+      const answered = questions.filter(q => q.locked).length;
+      const correct = questions.filter(q => q.locked && q.options.find(o => o.text === q.selected)?.correct).length;
+      const wrong = answered - correct;
+      const percent = questions.length ? Math.round((correct / questions.length) * 100) : 0;
+      resultBox.classList.add("show");
+      resultText.innerHTML = `Jami <strong>${questions.length}</strong> ta savoldan <strong>${answered}</strong> tasi ishlandi. To'g'ri: <strong>${correct}</strong>, xato: <strong>${wrong}</strong>. Umumiy foiz: <strong>${percent}%</strong>.`;
+      review.innerHTML = "";
+      questions.filter(q => q.locked && !q.options.find(o => o.text === q.selected)?.correct).forEach(q => {
+        const correctOption = q.options.find(o => o.correct);
+        const item = document.createElement("div");
+        item.className = "review-item bad";
+        item.innerHTML = `<strong>${q.number}-savol</strong><br><span class="math">${prettyMath(q.question)}</span><br><br>To'g'ri javob: <strong class="math">${prettyMath(correctOption.text)}</strong>`;
+        review.appendChild(item);
+      });
+      resultBox.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function restartQuiz() {
+      questions.forEach(q => {
+        q.selected = null;
+        q.locked = false;
+        q.shuffled = shuffle(q.options);
+      });
+      current = 0;
+      resultBox.classList.remove("show");
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (current > 0) current--;
+      render();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (current < questions.length - 1) current++;
+      render();
+    });
+
+    finishBtn.addEventListener("click", finishQuiz);
+    restartBtn.addEventListener("click", restartQuiz);
+
+    render();
+  </script>
+</body>
+</html>
